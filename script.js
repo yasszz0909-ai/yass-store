@@ -49,7 +49,7 @@ function kirimWA() {
     history.unshift({ id: orderID, item: itemSelected, qty: currentQty, total: total, date: new Date().toLocaleDateString('id-ID') });
     localStorage.setItem('fhistory', JSON.stringify(history));
 
-    const pesan = `Halo Admin FishIt!%0A%0A` +
+    const pesan = `Halo Admin!%0A%0A` +
         `🆔 ID Order: ${orderID}%0A` +
         `👤 User Roblox: ${roblox}%0A` +
         `📦 Produk: ${itemSelected}%0A` +
@@ -72,3 +72,4 @@ function loadHistory() {
         </div>
     `).join('') : "<p style='text-align:center'>Belum ada transaksi</p>";
 }
+
