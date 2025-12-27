@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/home", "destination": "/index.html" },
+    { "source": "/privacy-policy", "destination": "/privacy-policy/index.html" }
+  ]
+}
