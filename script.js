@@ -1,3 +1,35 @@
+// Paste konfigurasi dari Firebase tadi di sini
+const firebaseConfig = {
+  apiKey: "AIzaSyDYxvr8BSkomWhCryoX0EMBBZ8F0StKcck",
+  authDomain: "yass-37d12.firebaseapp.com",
+  projectId: "yass-37d12",
+  storageBucket: "yass-37d12.firebasestorage.app",
+  messagingSenderId: "993699961486",
+  appId: "1:993699961486:web:af36b1e2a7885ed796c7df",
+  measurementId: "G-LS6RGLRCYP"
+};
+
+// Inisialisasi Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// Fungsi Login Google
+function loginGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then((result) => {
+        const user = result.user;
+        alert("Selamat datang, " + user.displayName);
+        
+        // Otomatis isi nama user di kolom checkout jika ada
+        const userInput = document.getElementById('checkoutUser');
+        if(userInput) userInput.value = user.displayName;
+        
+    }).catch((error) => {
+        console.error("Login Gagal:", error);
+        alert("Gagal login: " + error.message);
+    });
+}
+
 const products = [
     { cat: 'robux', name: '1 Robux', price: 170, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
     { cat: 'robux', name: '100 Robux', price: 18000, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
@@ -129,4 +161,5 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
 
