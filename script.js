@@ -1,75 +1,147 @@
-const NOMOR_WA = "6283134187322"; // GANTI NOMOR WHATSAPP ANDA DI SINI
-let itemSelected = "";
-let basePrice = 0;
+const products = [
+    { cat: 'robux', name: '1 Robux', price: 170, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
+    { cat: 'robux', name: '100 Robux', price: 18000, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
+    { cat: 'robux', name: '500 Robux', price: 87000, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
+    { cat: 'robux', name: '1000 Robux', price: 150000, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
+    { cat: 'fish', name: 'El Shark Gran Maja', price: 15000, img: 'maja.png', desc: 'Stok Sangat Terbatas! Pengiriman via trade in-game.' },
+    { cat: 'fish', name: 'Frostborn Shark', price: 5000, img: 'frostborn.png', desc: 'Stok terbatas, Pengiriman via trade in-game.' },
+    { cat: 'fish', name: 'Giant Squid', price: 5000, img: 'giant_squid.png', desc: 'Pengiriman via trade in-game.' },
+    { cat: 'fish', name: 'Great Whale', price: 6500, img: 'great_whale.png', desc: 'Pengiriman via trade in-game.' },
+    { cat: 'fish', name: 'Enchant Stone 10x', price: 1100, img: 'stone.png', desc: 'Batu Enchant 10 pcs.' }, 
+    { cat: 'fish', name: 'Coin 1M', price: 5000, img: 'coin.png', desc: '1m Coin Fish It! Via Gift ikan Mythic!' }, 
+    { cat: 'fish', name: 'Joki Afk 1 jam', price: 1000, img: 'time.png', desc: 'Jasa AFK selama 1 jam.' }, 
+    { cat: 'robux', name: 'Akun VC (Email Bisa ganti)', price: 45000, img: 'person.png', desc: 'Akun Roblox sudah Voice Chat (VC). Email Bisa Di Ganti. ' }
+];
+
+let currentProduct = {};
 let currentQty = 1;
 
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    const items = document.querySelectorAll('.nav-item');
-    items.forEach(i => i.classList.remove('active'));
-    if(pageId === 'homePage') items[0].classList.add('active');
-    if(pageId === 'orderPage') items[1].classList.add('active');
-    if(pageId === 'historyPage') { items[2].classList.add('active'); loadHistory(); }
-    window.scrollTo(0,0);
+const darkModeBtn = document.getElementById('darkModeBtn');
+darkModeBtn.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    const icon = darkModeBtn.querySelector('i');
+    if(document.body.classList.contains('dark-mode')) {
+        icon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        icon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'light');
+    }
+};
+
+if(localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    darkModeBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
 }
 
-function pilihProduk(nama, harga) {
-    itemSelected = nama;
-    basePrice = harga;
+function renderProducts(filter = 'all') {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = '';
+    products.forEach((p) => {
+        if (filter === 'all' || p.cat === filter) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="icon"><img src="${p.img}" onerror="this.src='https://via.placeholder.com/60'"></div>
+                <h3>${p.name}</h3>
+                <p class="price">Rp ${p.price.toLocaleString('id-ID')}</p>
+            `;
+            card.onclick = () => bukaCheckout(p);
+            grid.appendChild(card);
+        }
+    });
+}
+
+function filterCat(cat, element) {
+    document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+    renderProducts(cat);
+}
+
+function bukaCheckout(p) {
+    currentProduct = p;
     currentQty = 1;
-    document.getElementById('displayProduk').innerText = nama;
-    document.getElementById('qtyVal').innerText = currentQty;
-    hitungTotal();
-    showPage('orderPage');
+    document.getElementById('checkoutName').innerText = p.name;
+    document.getElementById('checkoutPriceLabel').innerText = "Rp " + p.price.toLocaleString('id-ID');
+    document.getElementById('unitPrice').innerText = "Rp " + p.price.toLocaleString('id-ID');
+    document.getElementById('checkoutImg').src = p.img;
+    document.getElementById('productDesc').innerText = p.desc;
+    document.getElementById('checkoutQty').innerText = currentQty;
+    updateTotal();
+    document.getElementById('checkoutPage').style.display = "flex";
 }
 
-function changeQty(delta) {
-    currentQty += delta;
-    if(currentQty < 1) currentQty = 1;
-    document.getElementById('qtyVal').innerText = currentQty;
-    hitungTotal();
+function updateQty(delta) {
+    if (currentQty + delta >= 1) {
+        currentQty += delta;
+        document.getElementById('checkoutQty').innerText = currentQty;
+        updateTotal();
+    }
 }
 
-function hitungTotal() {
-    const total = basePrice * currentQty;
-    document.getElementById('displayTotal').innerText = "Rp " + total.toLocaleString('id-ID');
+function updateTotal() {
+    const total = currentProduct.price * currentQty;
+    document.getElementById('checkoutTotal').innerText = "Rp " + total.toLocaleString('id-ID');
 }
 
-function kirimWA() {
-    const roblox = document.getElementById('playerId').value;
-    const method = document.getElementById('methodInput').value;
-    if(!roblox || !method || !itemSelected) return alert("Harap isi Username dan pilih Metode Bayar!");
+function tutupCheckout() {
+    document.getElementById('checkoutPage').style.display = "none";
+}
 
-    const total = basePrice * currentQty;
-    const orderID = "TRX-" + Math.floor(Math.random() * 100000);
+function prosesKeWhatsApp() {
+    const wa = "6283898578903";
+    const user = document.getElementById('checkoutUser').value;
+    const payment = document.getElementById('paymentMethod').value;
+    const total = document.getElementById('checkoutTotal').innerText;
     
-    // Simpan Riwayat
-    let history = JSON.parse(localStorage.getItem('fhistory')) || [];
-    history.unshift({ id: orderID, item: itemSelected, qty: currentQty, total: total, date: new Date().toLocaleDateString('id-ID') });
-    localStorage.setItem('fhistory', JSON.stringify(history));
+    if (!user) return alert("Harap isi Username Anda!");
 
-    const pesan = `Halo Admin!%0A%0A` +
-        `🆔 ID Order: ${orderID}%0A` +
-        `👤 User Roblox: ${roblox}%0A` +
-        `📦 Produk: ${itemSelected}%0A` +
-        `🔢 Jumlah: ${currentQty}%0A` +
-        `💰 Total Bayar: Rp ${total.toLocaleString('id-ID')}%0A` +
-        `💳 Metode: ${method}%0A%0A` +
-        `*Minta Nope/Qris Min. Saya akan segera mengirim bukti transfer.*`;
-    
-    window.open(`https://wa.me/${NOMOR_WA}?text=${pesan}`, '_blank');
+    // FORMAT PESAN BARU YANG LEBIH MENARIK
+    const pesan = `*⚡ PESANAN BARU - YASS STORE ⚡*
+` +
+    `------------------------------------------
+` +
+    `📝 *Detail Produk:*
+` +
+    `> *Item:* ${currentProduct.name}
+` +
+    `> *Jumlah:* ${currentQty}x
+` +
+    `> *Harga Satuan:* Rp ${currentProduct.price.toLocaleString('id-ID')}
+` +
+    `
+` +
+    `👤 *Informasi Pembeli:*
+` +
+    `> *Username:* ${user}
+` +
+    `> *Metode:* ${payment}
+` +
+    `
+` +
+    `💵 *Total Pembayaran:*
+` +
+    `*${total}*
+` +
+    `------------------------------------------
+` +
+    `_Mohon segera diproses ya Min, terima kasih!_`;
+
+    const linkWA = "https://api.whatsapp.com/send?phone=" + wa + "&text=" + encodeURIComponent(pesan);
+    window.open(linkWA, "_blank");
 }
 
-function loadHistory() {
-    const container = document.getElementById('listTransaksi');
-    const history = JSON.parse(localStorage.getItem('fhistory')) || [];
-    container.innerHTML = history.length ? history.map(trx => `
-        <div class="history-card">
-            <div style="font-size:0.6rem; opacity:0.5">${trx.date} | ${trx.id}</div>
-            <strong>${trx.item} (x${trx.qty})</strong>
-            <div style="color:#00d2ff">Rp ${trx.total.toLocaleString('id-ID')}</div>
-        </div>
-    `).join('') : "<p style='text-align:center'>Belum ada transaksi</p>";
-}
 
+window.onload = () => {
+    setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        renderProducts();
+    }, 1200);
+};
+
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    let k = this.value.toLowerCase();
+    document.querySelectorAll('.card').forEach(c => {
+        c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
+    });
+});
