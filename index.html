@@ -3,107 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fish It! Store - Marketplace</title>
+    <title>Yass Store Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="mainContent">
-        <header class="app-header">
-            <div class="logo">Yass<span>Store</span></div>
-            <div class="badge-status">Online</div>
-        </header>
+    <div id="loader" class="loader-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Yass Store</p>
+    </div>
 
-        <div class="container">
-            <section id="homePage" class="page active">
-                <div class="welcome-banner">
-                    <h3>Halo, Selamat Belanja! 🎣</h3>
-                    <p>Pilih Robux atau Item Fish It favoritmu.</p>
+    <header>
+        <div class="welcome-container">
+            <div class="welcome-text">
+                <span>Welcome To</span>
+                <h1 class="store-name">Yass Store <i class="fas fa-check-circle verified-badge"></i></h1>
+            </div>
+            <div class="header-right">
+                <div id="darkModeBtn" class="dark-mode-toggle">
+                    <i class="fas fa-moon"></i>
                 </div>
-
-                <div class="section-group">
-                    <h4 class="cat-label">💎 ROBUX (AFTER TAX)</h4>
-                    <div class="grid-produk">
-                        <div class="card" onclick="pilihProduk('100 Robux (AT)', 18000)">
-                            <p>100 Robux</p>
-                            <span class="price">Rp 18.000</span>
-                        </div>
-                        <div class="card" onclick="pilihProduk('400 Robux (AT)', 70000)">
-                            <p>400 Robux</p>
-                            <span class="price">Rp 70.000</span>
-                        </div>
-                    </div>
+                <div class="header-logo">
+                    <img src="logo.png" alt="Logo">
                 </div>
+            </div>
+        </div>
+        <div class="search-bar">
+            <i class="fa fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Cari item game...">
+        </div>
+    </header>
 
-                <div class="section-group" style="margin-top:25px;">
-                    <h4 class="cat-label">🎣 FISH IT! ITEMS</h4>
-                    <div class="grid-produk">
-                        <div class="card card-rare" onclick="pilihProduk('Gran Maja', 15000)">
-                            <p>Gran Maja</p>
-                            <span class="stok">Stok: 1</span>
-                            <span class="price">Rp 15.000</span>
-                        </div>
-                        <div class="card card-rare" onclick="pilihProduk('Secret TB', 5000)">
-                            <p>Secret TB</p>
-                            <span class="stok">Stok: 2</span>
-                            <span class="price">Rp 5.000</span>
-                        </div>
-                        <div class="card card-rare" onclick="pilihProduk('Enchant Stone', 1100)">
-                            <p>Enchant Stone 10pcs</p>
-                            <span class="stok">Stok: 10</span>
-                            <span class="price">Rp 1.100</span>
-                        </div>
-                        <div class="card card-rare" onclick="pilihProduk('Coin 1M via mitos', 5000)">
-                            <p>Coin 1M (Mitos)</p>
-                            <span class="stok">Tersedia</span>
-                            <span class="price">Rp 5.000</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="orderPage" class="page">
-                <div class="section-header"><h2>🛒 Buat Pesanan</h2></div>
-                <div class="glass-card">
-                    <label>Username Roblox:</label>
-                    <input type="text" id="playerId" placeholder="Masukkan ID Game..." class="main-input">
-                    <div class="item-summary-box">
-                        <span id="displayProduk" style="font-weight:bold; color:#00d2ff;">Pilih Produk...</span>
-                        <div class="counter">
-                            <button onclick="changeQty(-1)">-</button>
-                            <span id="qtyVal">1</span>
-                            <button onclick="changeQty(1)">+</button>
-                        </div>
-                    </div>
-                    <select id="methodInput" class="main-input">
-                        <option value="">Pilih Metode Bayar</option>
-                        <option value="DANA">DANA (Minta Di WhatsApp)</option>
-                        <option value="QRIS">QRIS (Minta di WhatsApp)</option>
-                    </select>
-                    <div class="total-area">
-                        <p>Total Harga</p>
-                        <h2 id="displayTotal">Rp 0</h2>
-                    </div>
-                    <div class="info-transfer">
-                        Wajib kirim Bukti Transfer di WA setelah pesan.
-                    </div>
-                    <button class="btn-primary" onclick="kirimWA()">BELI SEKARANG</button>
-                </div>
-            </section>
-
-            <section id="historyPage" class="page">
-                <div class="section-header"><h2>📜 Riwayat</h2></div>
-                <div id="listTransaksi"></div>
-            </section>
+    <main>
+        <div class="categories" style="margin-top: 20px;">
+            <div class="cat-item active" onclick="filterCat('all', this)">All/Semua</div>
+            <div class="cat-item" onclick="filterCat('robux', this)">Roblox</div>
+            <div class="cat-item" onclick="filterCat('fish', this)">Fish It!</div>
         </div>
 
-        <nav class="bottom-nav">
-            <div class="nav-item active" onclick="showPage('homePage')">🏠<span>Home</span></div>
-            <div class="nav-item" onclick="showPage('orderPage')">🛒<span>Pesanan</span></div>
-            <div class="nav-item" onclick="showPage('historyPage')">📋<span>Transaksi</span></div>
-        </nav>
+        <section class="game-section">
+            <div class="product-grid" id="productGrid"></div>
+        </section>
+    </main>
+
+    <div id="checkoutPage" class="checkout-overlay">
+        <div class="checkout-content">
+            <div class="checkout-header">
+                <button class="btn-back" onclick="tutupCheckout()"><i class="fa fa-times"></i></button>
+                <span class="header-title">Detail Pesanan</span>
+            </div>
+            
+            <div class="checkout-body">
+                <div class="product-info-card">
+                    <div class="img-wrapper">
+                        <img id="checkoutImg" src="" alt="Produk">
+                    </div>
+                    <div class="info-text">
+                        <h2 id="checkoutName"></h2>
+                        <p id="checkoutPriceLabel" class="price-tag"></p>
+                    </div>
+                </div>
+
+                <div class="detail-box">
+                    <b><i class="fa fa-file-alt"></i> Detail Produk:</b>
+                    <span id="productDesc"></span>
+                </div>
+
+                <div class="checkout-form">
+                    <div class="form-group">
+                        <label>Username Roblox</label>
+                        <input type="text" id="checkoutUser" placeholder="Masukkan Username Anda">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Metode Pembayaran</label>
+                        <select id="paymentMethod">
+                            <option value="DANA">DANA</option>
+                            <option value="QRIS">QRIS (All Payment)</option>
+                        </select>
+                    </div>
+
+                    <div class="qty-section">
+                        <label>Jumlah</label>
+                        <div class="qty-control">
+                            <button onclick="updateQty(-1)" class="btn-qty">-</button>
+                            <span id="checkoutQty">1</span>
+                            <button onclick="updateQty(1)" class="btn-qty">+</button>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-line"><span>Harga Satuan</span> <span id="unitPrice"></span></div>
+                        <div class="summary-line total"><span>Total Bayar</span> <span id="checkoutTotal"></span></div>
+                    </div>
+
+                    <button class="btn-confirm" onclick="prosesKeWhatsApp()">
+                        Beli Sekarang <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fa fa-home"></i>
+            <span>Home</span>
+        </a>
+    </nav>
 
     <script src="script.js"></script>
 </body>
