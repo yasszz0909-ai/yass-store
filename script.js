@@ -22,26 +22,21 @@ function loginGoogle(event) {
     auth.signInWithRedirect(provider);
 }
 
-// 2. Kode ini berjalan OTOMATIS saat user kembali ke web setelah pilih akun Google
+// Letakkan ini di script.js setelah inisialisasi Firebase
 auth.getRedirectResult().then((result) => {
-    if (result.user) {
-        // Berhasil Login!
+    if (result && result.user) {
+        // Login Berhasil
         const user = result.user;
         alert("Selamat datang, " + user.displayName);
         
-        // Simpan nama ke form checkout jika ada
-        const userInput = document.getElementById('checkoutUser');
-        if(userInput) userInput.value = user.displayName;
-        
-        // Ganti ikon user menjadi foto profil (Opsional tapi Keren)
-        const loginBtn = document.getElementById('loginBtn');
-        if(loginBtn) {
-            loginBtn.innerHTML = `<img src="${user.photoURL}" style="width:30px; border-radius:50%;">`;
-        }
+        // Update tampilan agar loading berhenti
+        document.getElementById('loginBtn').innerHTML = `<img src="${user.photoURL}" style="width:30px; border-radius:50%;">`;
     }
 }).catch((error) => {
-    console.error("Error saat login:", error.message);
+    console.error("Gagal Login:", error.message);
+    // Jika error, pastikan loading tidak stuck
 });
+
 }
 
 const products = [
@@ -175,6 +170,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
 
 
 
