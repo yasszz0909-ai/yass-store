@@ -14,19 +14,18 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 // Fungsi Login Google
-function loginGoogle() {
+function loginGoogle(event) {
+    if (event) event.preventDefault(); // Menghentikan refresh halaman
+    
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then((result) => {
         const user = result.user;
         alert("Selamat datang, " + user.displayName);
         
-        // Otomatis isi nama user di kolom checkout jika ada
         const userInput = document.getElementById('checkoutUser');
         if(userInput) userInput.value = user.displayName;
-        
     }).catch((error) => {
         console.error("Login Gagal:", error);
-        alert("Gagal login: " + error.message);
     });
 }
 
@@ -161,5 +160,6 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
 
 
