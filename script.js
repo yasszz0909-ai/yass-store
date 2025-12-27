@@ -96,39 +96,23 @@ function prosesKeWhatsApp() {
     
     if (!user) return alert("Harap isi Username Anda!");
 
-    // FORMAT PESAN BARU YANG LEBIH MENARIK
     const pesan = `*⚡ PESANAN BARU - YASS STORE ⚡*
-` +
-    `------------------------------------------
-` +
-    `📝 *Detail Produk:*
-` +
-    `> *Item:* ${currentProduct.name}
-` +
-    `> *Jumlah:* ${currentQty}x
-` +
-    `> *Harga Satuan:* Rp ${currentProduct.price.toLocaleString('id-ID')}
-` +
-    `
-` +
-    `👤 *Informasi Pembeli:*
-` +
-    `> *Username:* ${user}
-` +
-    `> *Metode:* ${payment}
-` +
-    `
-` +
-    `💵 *Total Pembayaran:*
-` +
-    `*${total}*
-` +
-    `------------------------------------------
-` +
-    `_Mohon segera diproses ya Min, terima kasih!_`;
+------------------------------------------
+📝 *Detail Produk:*
+> *Item:* ${currentProduct.name}
+> *Jumlah:* ${currentQty}x
+> *Harga Satuan:* Rp ${currentProduct.price.toLocaleString('id-ID')}
 
-    const linkWA = "https://api.whatsapp.com/send?phone=" + wa + "&text=" + encodeURIComponent(pesan);
-    window.open(linkWA, "_blank");
+👤 *Informasi Pembeli:*
+> *Username:* ${user}
+> *Metode:* ${payment}
+
+💵 *Total Pembayaran:*
+*${total}*
+------------------------------------------
+_Mohon segera diproses ya Min, terima kasih!_`;
+
+    window.open(`https://api.whatsapp.com/send?phone=${wa}&text=${encodeURIComponent(pesan)}`, "_blank");
 }
 
 
@@ -145,3 +129,4 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
