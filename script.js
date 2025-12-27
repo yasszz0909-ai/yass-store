@@ -1,4 +1,3 @@
-// Paste konfigurasi dari Firebase tadi di sini
 const firebaseConfig = {
   apiKey: "AIzaSyDYxvr8BSkomWhCryoX0EMBBZ8F0StKcck",
   authDomain: "yass-37d12.firebaseapp.com",
@@ -9,35 +8,26 @@ const firebaseConfig = {
   measurementId: "G-LS6RGLRCYP"
 };
 
-// Inisialisasi Firebase
-firebase.initializeApp(firebaseConfig);
+// Inisialisasi tanpa mengganggu loading halaman
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const auth = firebase.auth();
 
-// 1. Fungsi untuk memulai Login (Metode Redirect)
 function loginGoogle(event) {
     if (event) event.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
     
-    // Menggunakan Redirect agar tidak diblokir browser HP
-    auth.signInWithRedirect(provider);
-}
-
-// Letakkan ini di script.js setelah inisialisasi Firebase
-auth.getRedirectResult().then((result) => {
-    if (result && result.user) {
-        // Login Berhasil
+    // Gunakan Popup kembali karena lebih cepat daripada menunggu Redirect yang berat
+    auth.signInWithPopup(provider).then((result) => {
         const user = result.user;
-        alert("Selamat datang, " + user.displayName);
-        
-        // Update tampilan agar loading berhenti
+        alert("Halo " + user.displayName);
         document.getElementById('loginBtn').innerHTML = `<img src="${user.photoURL}" style="width:30px; border-radius:50%;">`;
-    }
-}).catch((error) => {
-    console.error("Gagal Login:", error.message);
-    // Jika error, pastikan loading tidak stuck
-});
-
+    }).catch((error) => {
+        console.error("Login bermasalah:", error.message);
+    });
 }
+
 
 const products = [
     { cat: 'robux', name: '1 Robux', price: 170, img: 'robux.png', desc: 'Dikirim melalui sistem gamepass. Robux Masuk Setelah 5-7 Hari!' },
@@ -170,6 +160,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
 
 
 
