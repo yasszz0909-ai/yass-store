@@ -13,20 +13,35 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Fungsi Login Google
+// 1. Fungsi untuk memulai Login (Metode Redirect)
 function loginGoogle(event) {
-    if (event) event.preventDefault(); // Menghentikan refresh halaman
-    
+    if (event) event.preventDefault();
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then((result) => {
+    
+    // Menggunakan Redirect agar tidak diblokir browser HP
+    auth.signInWithRedirect(provider);
+}
+
+// 2. Kode ini berjalan OTOMATIS saat user kembali ke web setelah pilih akun Google
+auth.getRedirectResult().then((result) => {
+    if (result.user) {
+        // Berhasil Login!
         const user = result.user;
         alert("Selamat datang, " + user.displayName);
         
+        // Simpan nama ke form checkout jika ada
         const userInput = document.getElementById('checkoutUser');
         if(userInput) userInput.value = user.displayName;
-    }).catch((error) => {
-        console.error("Login Gagal:", error);
-    });
+        
+        // Ganti ikon user menjadi foto profil (Opsional tapi Keren)
+        const loginBtn = document.getElementById('loginBtn');
+        if(loginBtn) {
+            loginBtn.innerHTML = `<img src="${user.photoURL}" style="width:30px; border-radius:50%;">`;
+        }
+    }
+}).catch((error) => {
+    console.error("Error saat login:", error.message);
+});
 }
 
 const products = [
@@ -160,6 +175,7 @@ document.getElementById('searchInput').addEventListener('keyup', function() {
         c.style.display = c.innerText.toLowerCase().includes(k) ? "block" : "none";
     });
 });
+
 
 
 
